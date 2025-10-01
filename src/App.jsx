@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import MessageBubble from "./components/MessageBubble";
 import ChatInput from "./components/ChatInput";
 import { chatService } from "./services/chatService";
@@ -11,6 +11,28 @@ export default function ChatApp() {
   const [input, setInput] = useState("");
   const [replyTo, setReplyTo] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef(null);
+
+  // Auto-scroll to bottom when new messages are added
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ 
+      behavior: "smooth",
+      block: "end"
+    });
+  };
+
+  // Effect to scroll when messages change
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  // Effect to scroll when loading state changes (when AI starts/stops typing)
+  useEffect(() => {
+    if (isLoading) {
+      // Small delay to ensure loading indicator is rendered
+      setTimeout(scrollToBottom, 100);
+    }
+  }, [isLoading]);
 
   const handleReply = (message) => {
     setReplyTo(message);
@@ -136,6 +158,9 @@ export default function ChatApp() {
             </div>
           </div>
         )}
+        
+        {/* Scroll anchor */}
+        <div ref={messagesEndRef} />
       </div>
 
       <div className="chat-input-container">
