@@ -57,6 +57,20 @@ export default function MessageBubble({ msg, idx, onReply }) {
           
           {/* Message wrapper */}
           <div className={`message-wrapper ${isAI ? "ai" : "user"}`}>
+            {/* Reply Reference - Show if this message is replying to another */}
+            {msg.replyTo && (
+              <div className={`reply-reference ${isAI ? "ai-reply" : "user-reply"}`}>
+                <div className="reply-reference-content">
+                  <span className="reply-reference-sender">
+                    {msg.replyTo.sender === "ai" ? "🤖 AI Assistant" : "👤 You"}
+                  </span>
+                  <span className="reply-reference-text">
+                    {msg.replyTo.text.length > 30 ? `${msg.replyTo.text.substring(0, 30)}...` : msg.replyTo.text}
+                  </span>
+                </div>
+              </div>
+            )}
+            
             {/* WhatsApp-style chat bubble with border */}
             <div className={`message-bubble ${isAI ? "ai-bubble" : "user-bubble"}`}>
               {msg.text}

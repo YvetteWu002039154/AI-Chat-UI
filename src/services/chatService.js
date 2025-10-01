@@ -4,17 +4,28 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api'
 // Chat API Service
 export const chatService = {
   // Send message to AI and get response
-  async sendMessage(message, conversationHistory = []) {
+  async sendMessage(message, conversationHistory = [], replyContext = null) {
     try {
+      const requestBody = {
+        message: message,
+        history: conversationHistory.slice(-10), // Send last 10 messages for context
+      };
+
+      // Add reply context if available
+      if (replyContext) {
+        requestBody.replyTo = {
+          sender: replyContext.sender,
+          text: replyContext.text,
+          timestamp: replyContext.timestamp
+        };
+      }
+
       const response = await fetch(`${API_BASE_URL}/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          message: message,
-          history: conversationHistory.slice(-10), // Send last 10 messages for context
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       if (!response.ok) {
@@ -27,13 +38,19 @@ export const chatService = {
       console.error('Chat API Error:', error);
       
       // Fallback to mock responses when backend is not available
-      return this.getMockResponse(message);
+      return this.getMockResponse(message, replyContext);
     }
   },
 
   // Mock responses for development (when backend is not ready)
-  getMockResponse(userInput) {
+  getMockResponse(userInput, replyContext = null) {
     const input = userInput.toLowerCase().trim();
+
+    // Handle reply context in mock responses
+    if (replyContext) {
+      const repliedTo = replyContext.sender === 'ai' ? 'my previous message' : 'your message';
+      return `I see you're replying to ${repliedTo} about "${replyContext.text.substring(0, 30)}${replyContext.text.length > 30 ? '...' : ''}". ${this.getContextualMockResponse(input)}`;
+    }
 
     // Greetings
     if (input.includes('hello') || input.includes('hi') || input.includes('hey')) {
@@ -104,6 +121,19 @@ export const chatService = {
       "I find that quite thought-provoking! What's your take on it? 💡"
     ];
 
+    return responses[Math.floor(Math.random() * responses.length)];
+  },
+
+  // Get contextual response when replying
+  getContextualMockResponse(input) {
+    const responses = [
+      "Thanks for following up on that! 👍",
+      "I appreciate the additional context! 💭",
+      "That's a great way to build on our conversation! 🌟",
+      "Thanks for the clarification! 😊",
+      "I see what you mean now! 💡",
+      "That adds good perspective to what we were discussing! ⭐"
+    ];
     return responses[Math.floor(Math.random() * responses.length)];
   },
 

@@ -45,8 +45,8 @@ export default function ChatApp() {
       // Get conversation history for API context
       const conversationHistory = chatService.formatConversationHistory(messages);
       
-      // Call API service (will use mock responses if backend is not available)
-      const aiResponse = await chatService.sendMessage(userMessage.text, conversationHistory);
+      // Call API service with reply context (will use mock responses if backend is not available)
+      const aiResponse = await chatService.sendMessage(userMessage.text, conversationHistory, replyTo);
       
       // Add AI response
       setMessages((prev) => [
