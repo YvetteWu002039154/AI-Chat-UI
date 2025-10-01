@@ -6,19 +6,33 @@ import "./App.css";
 
 export default function ChatApp() {
   const [messages, setMessages] = useState([
-    { sender: "ai", text: "Hello! I'm your AI assistant. How can I help you today?" },
+    { id: 1, sender: "ai", text: "Hello! I'm your AI assistant. How can I help you today?", timestamp: new Date().toISOString() },
   ]);
   const [input, setInput] = useState("");
   const [replyTo, setReplyTo] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  const handleReply = (message) => {
+    setReplyTo(message);
+  };
+
+  const handleCancelReply = () => {
+    setReplyTo(null);
+  };
+
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
 
     const userMessage = {
+      id: Date.now(),
       sender: "user",
       text: input,
       timestamp: new Date().toISOString(),
+      replyTo: replyTo ? {
+        id: replyTo.id,
+        text: replyTo.text,
+        sender: replyTo.sender
+      } : null
     };
 
     // Add user message immediately
@@ -38,6 +52,7 @@ export default function ChatApp() {
       setMessages((prev) => [
         ...prev,
         {
+          id: Date.now() + 1,
           sender: "ai",
           text: aiResponse,
           timestamp: new Date().toISOString(),
@@ -50,6 +65,7 @@ export default function ChatApp() {
       setMessages((prev) => [
         ...prev,
         {
+          id: Date.now() + 1,
           sender: "ai",
           text: "Sorry, I'm having trouble responding right now. Please try again! 😅",
           timestamp: new Date().toISOString(),
@@ -73,7 +89,7 @@ export default function ChatApp() {
 
       <div className="messages-container">
         {messages.map((msg, idx) => (
-          <MessageBubble key={idx} msg={msg} idx={idx} />
+          <MessageBubble key={msg.id || idx} msg={msg} idx={idx} onReply={handleReply} />
         ))}
         
         {/* Loading indicator */}
@@ -105,6 +121,8 @@ export default function ChatApp() {
             setInput={setInput}
             onSend={handleSend}
             isLoading={isLoading}
+            replyTo={replyTo}
+            onCancelReply={handleCancelReply}
           />
         </div>
       </div>
