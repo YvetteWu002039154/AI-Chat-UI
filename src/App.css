@@ -321,6 +321,41 @@ body, html {
   font-style: italic;
 }
 
+/* Clickable reply reference */
+.reply-reference.clickable {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.reply-reference.clickable:hover {
+  opacity: 1;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.reply-reference.clickable:active {
+  transform: translateY(0);
+}
+
+/* Message highlight animation */
+.message-highlight {
+  animation: highlightMessage 2s ease-in-out;
+}
+
+@keyframes highlightMessage {
+  0% {
+    background-color: transparent;
+  }
+  20% {
+    background-color: rgba(59, 130, 246, 0.2);
+    transform: scale(1.02);
+  }
+  100% {
+    background-color: transparent;
+    transform: scale(1);
+  }
+}
+
 /* Chat Input Styles */
 .chat-input-main {
   width: 100%;

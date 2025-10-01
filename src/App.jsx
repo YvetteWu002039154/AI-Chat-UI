@@ -20,6 +20,23 @@ export default function ChatApp() {
     setReplyTo(null);
   };
 
+  const handleJumpToMessage = (messageId) => {
+    // Find the message element and scroll to it
+    const messageElement = document.querySelector(`[data-message-id="${messageId}"]`);
+    if (messageElement) {
+      messageElement.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'center' 
+      });
+      
+      // Add highlight effect
+      messageElement.classList.add('message-highlight');
+      setTimeout(() => {
+        messageElement.classList.remove('message-highlight');
+      }, 2000);
+    }
+  };
+
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
 
@@ -89,7 +106,14 @@ export default function ChatApp() {
 
       <div className="messages-container">
         {messages.map((msg, idx) => (
-          <MessageBubble key={msg.id || idx} msg={msg} idx={idx} onReply={handleReply} />
+          <div key={msg.id || idx} data-message-id={msg.id}>
+            <MessageBubble 
+              msg={msg} 
+              idx={idx} 
+              onReply={handleReply} 
+              onJumpToMessage={handleJumpToMessage}
+            />
+          </div>
         ))}
         
         {/* Loading indicator */}

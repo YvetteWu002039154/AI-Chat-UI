@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 
-export default function MessageBubble({ msg, idx, onReply }) {
+export default function MessageBubble({ msg, idx, onReply, onJumpToMessage }) {
   const isAI = msg.sender === "ai";
   const [showContextMenu, setShowContextMenu] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
@@ -59,7 +59,11 @@ export default function MessageBubble({ msg, idx, onReply }) {
           <div className={`message-wrapper ${isAI ? "ai" : "user"}`}>
             {/* Reply Reference - Show if this message is replying to another */}
             {msg.replyTo && (
-              <div className={`reply-reference ${isAI ? "ai-reply" : "user-reply"}`}>
+              <div 
+                className={`reply-reference ${isAI ? "ai-reply" : "user-reply"} clickable`}
+                onClick={() => onJumpToMessage && onJumpToMessage(msg.replyTo.id)}
+                title="Click to jump to original message"
+              >
                 <div className="reply-reference-content">
                   <span className="reply-reference-sender">
                     {msg.replyTo.sender === "ai" ? "🤖 AI Assistant" : "👤 You"}
