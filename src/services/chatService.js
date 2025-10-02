@@ -94,7 +94,7 @@ export const chatService = {
     }
 
     // Math questions
-    if (input.match(/\d+\s*[\+\-\*\/]\s*\d+/)) {
+    if (input.match(/\d+\s*[+\-*/]\s*\d+/)) {
       try {
         // Simple math evaluation (be careful with eval in real apps)
         const result = Function('"use strict"; return (' + input.replace(/[^0-9+\-*/().\s]/g, '') + ')')();
@@ -126,6 +126,11 @@ export const chatService = {
 
   // Get contextual response when replying
   getContextualMockResponse(input) {
+    // Add some context-aware responses based on input content
+    if (input.includes('thanks') || input.includes('thank you')) {
+      return "You're very welcome! Happy to help! 😊";
+    }
+    
     const responses = [
       "Thanks for following up on that! 👍",
       "I appreciate the additional context! 💭",

@@ -1,5 +1,5 @@
-import { motion } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
+import { motion } from "framer-motion";
 
 export default function MessageBubble({ msg, idx, onReply, onJumpToMessage }) {
   const isAI = msg.sender === "ai";
