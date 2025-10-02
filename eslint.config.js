@@ -5,15 +5,11 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 
 export default [
   {
-    ignores: ['dist/**']
+    ignores: ['dist', 'node_modules']
   },
+  js.configs.recommended,
   {
     files: ['**/*.{js,jsx}'],
-    extends: [
-      js.configs.recommended,
-      reactHooks.configs['recommended-latest'],
-      reactRefresh.configs.vite,
-    ],
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
@@ -28,15 +24,16 @@ export default [
       'react-refresh': reactRefresh,
     },
     rules: {
-      ...js.configs.recommended.rules,
-      ...reactHooks.configs.recommended.rules,
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },
       ],
       'no-unused-vars': ['error', { 
-        varsIgnorePattern: '^[A-Z_]',
-        argsIgnorePattern: '^_'
+        varsIgnorePattern: '^[A-Z_]|^motion$',
+        argsIgnorePattern: '^_',
+        ignoreRestSiblings: true
       }],
     },
   },
