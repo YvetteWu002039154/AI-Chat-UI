@@ -46,7 +46,6 @@ export default function MessageBubble({ msg, idx, onReply, onJumpToMessage }) {
       >
         <div className={`message-content ${isAI ? "ai" : "user"}`}>
           
-          {/* Avatar */}
           <div className={`message-avatar ${
             isAI 
               ? "bg-gradient-to-br from-gray-600 to-gray-700 text-white" 
@@ -55,9 +54,7 @@ export default function MessageBubble({ msg, idx, onReply, onJumpToMessage }) {
             {isAI ? "🤖" : "👤"}
           </div>
           
-          {/* Message wrapper */}
           <div className={`message-wrapper ${isAI ? "ai" : "user"}`}>
-            {/* Reply Reference - Show if this message is replying to another */}
             {msg.replyTo && (
               <div 
                 className={`reply-reference ${isAI ? "ai-reply" : "user-reply"} clickable`}
@@ -75,12 +72,10 @@ export default function MessageBubble({ msg, idx, onReply, onJumpToMessage }) {
               </div>
             )}
             
-            {/* WhatsApp-style chat bubble with border */}
             <div className={`message-bubble ${isAI ? "ai-bubble" : "user-bubble"}`}>
               {msg.text}
             </div>
             
-            {/* Timestamp */}
             <div className={`message-time ${isAI ? "text-left" : "text-right"}`}>
               {new Date().toLocaleTimeString('en-US', { 
                 hour: '2-digit', 
@@ -92,7 +87,6 @@ export default function MessageBubble({ msg, idx, onReply, onJumpToMessage }) {
         </div>
       </motion.div>
 
-      {/* Context Menu */}
       {showContextMenu && (
         <div
           ref={menuRef}

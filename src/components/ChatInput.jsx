@@ -3,7 +3,7 @@ import { Send, X } from "lucide-react";
 export default function ChatInput({ input, setInput, onSend, isLoading, replyTo, onCancelReply }) {
   return (
     <div className="chat-input-main">
-      {/* Reply Preview */}
+        
       {replyTo && (
         <div className="reply-preview">
           <div className="reply-content">

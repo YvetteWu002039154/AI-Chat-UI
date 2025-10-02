@@ -13,7 +13,6 @@ export default function ChatApp() {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
-  // Auto-scroll to bottom when new messages are added
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ 
       behavior: "smooth",
@@ -21,15 +20,12 @@ export default function ChatApp() {
     });
   };
 
-  // Effect to scroll when messages change
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
-  // Effect to scroll when loading state changes (when AI starts/stops typing)
   useEffect(() => {
     if (isLoading) {
-      // Small delay to ensure loading indicator is rendered
       setTimeout(scrollToBottom, 100);
     }
   }, [isLoading]);
@@ -43,7 +39,6 @@ export default function ChatApp() {
   };
 
   const handleJumpToMessage = (messageId) => {
-    // Find the message element and scroll to it
     const messageElement = document.querySelector(`[data-message-id="${messageId}"]`);
     if (messageElement) {
       messageElement.scrollIntoView({ 
@@ -51,7 +46,6 @@ export default function ChatApp() {
         block: 'center' 
       });
       
-      // Add highlight effect
       messageElement.classList.add('message-highlight');
       setTimeout(() => {
         messageElement.classList.remove('message-highlight');
@@ -74,20 +68,16 @@ export default function ChatApp() {
       } : null
     };
 
-    // Add user message immediately
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setReplyTo(null);
     setIsLoading(true);
 
     try {
-      // Get conversation history for API context
       const conversationHistory = chatService.formatConversationHistory(messages);
       
-      // Call API service with reply context (will use mock responses if backend is not available)
       const aiResponse = await chatService.sendMessage(userMessage.text, conversationHistory, replyTo);
       
-      // Add AI response
       setMessages((prev) => [
         ...prev,
         {
@@ -100,7 +90,6 @@ export default function ChatApp() {
     } catch (error) {
       console.error("Error getting AI response:", error);
       
-      // Fallback error message
       setMessages((prev) => [
         ...prev,
         {
@@ -115,7 +104,6 @@ export default function ChatApp() {
     }
   };
 
-  // Add error boundary for debugging
   if (!messages) {
     return <div>Loading messages...</div>;
   }
@@ -138,7 +126,6 @@ export default function ChatApp() {
           </div>
         ))}
         
-        {/* Loading indicator */}
         {isLoading && (
           <div className="message-row ai-message">
             <div className="message-content ai">
@@ -159,7 +146,6 @@ export default function ChatApp() {
           </div>
         )}
         
-        {/* Scroll anchor */}
         <div ref={messagesEndRef} />
       </div>
 
